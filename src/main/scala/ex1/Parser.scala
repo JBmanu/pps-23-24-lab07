@@ -30,8 +30,12 @@ trait NonEmpty[T] extends Parser[T]:
 class NonEmptyParser(chars: Set[Char]) extends BasicParser(chars) with NonEmpty[Char]
 
 trait NotTwoConsecutive[T] extends Parser[T]:
-  val todo = ???
-// ???
+  private[this] var lastToken: Option[T] = None
+
+  abstract override def parse(t: T): Boolean =
+    val result = !lastToken.contains(t) && super.parse(t)
+    lastToken = Some(t)
+    result
 
 class NotTwoConsecutiveParser(chars: Set[Char]) extends BasicParser(chars) with NotTwoConsecutive[Char]
 

@@ -32,8 +32,11 @@ class SimpleRobot(var position: Position, var direction: Direction) extends Robo
 
 class RobotWithBattery(val robot: Robot, var battery: Int) extends Robot:
   export robot.{position, direction}
-  override def turn(dir: Direction): Unit = { robot.turn(dir); battery -= 1 }
-  override def act(): Unit = ??? // { robot.act(); battery -= 1 }
+  override def turn(dir: Direction): Unit = { robot.turn(dir); decreaseBattery }
+  override def act(): Unit = { robot.act(); decreaseBattery }
+
+  private def decreaseBattery: Unit = battery -= 1
+
 
 
 class DumbRobot(val robot: Robot) extends Robot:

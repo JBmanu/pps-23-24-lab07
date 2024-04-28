@@ -7,7 +7,7 @@ import scala.language.postfixOps
 
 class RobotWithBatteryTest extends AnyFlatSpec with Matchers:
 
-  "A SimpleRobot with battery" should "turn correctly" in :
+  "A SimpleRobot with battery" should "turn correctly" in:
     val robot = new RobotWithBattery(SimpleRobot((0, 0), Direction.North), 4)
 
     robot.turn(Direction.East)
@@ -25,7 +25,25 @@ class RobotWithBatteryTest extends AnyFlatSpec with Matchers:
     robot.turn(Direction.North)
     robot.direction should be(Direction.North)
     robot.battery should be(0)
-    
+
+  it should "act correctly" in:
+    val robot = new RobotWithBattery(SimpleRobot((0, 0), Direction.North), 4)
+
+    robot.act()
+    robot.position should be((0, 1))
+
+    robot.turn(Direction.East)
+    robot.act()
+    robot.position should be((1, 1))
+
+    robot.turn(Direction.South)
+    robot.act()
+    robot.position should be((1, 0))
+
+    robot.turn(Direction.West)
+    robot.act()
+    robot.position should be((0, 0))
+
 
 
 

@@ -30,14 +30,12 @@ class SimpleRobot(var position: Position, var direction: Direction) extends Robo
     case Direction.West => (position._1 - 1, position._2)
   override def toString: String = s"robot at $position facing $direction"
 
-class RobotWithBattery(val robot: Robot, var battery: Int) extends Robot:
+class RobotWithBattery(val robot: Robot, val actionCost: Int, var battery: Int = 100) extends Robot:
   export robot.{position, direction}
   override def turn(dir: Direction): Unit = { robot.turn(dir); decreaseBattery }
   override def act(): Unit = { robot.act(); decreaseBattery }
 
-  private def decreaseBattery: Unit = battery -= 1
-
-
+  private def decreaseBattery: Unit = battery -= actionCost
 
 class DumbRobot(val robot: Robot) extends Robot:
   export robot.{position, direction, act}

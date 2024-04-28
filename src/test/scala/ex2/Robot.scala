@@ -6,7 +6,7 @@ import org.scalatest.matchers.should.Matchers
 class RobotSpec extends AnyFlatSpec with Matchers:
   val startPosition = (0, 0)
 
-  "A SimpleRobot" should "turn correctly" in:
+  "A SimpleRobot" should "turn correctly" in :
     val robot = new SimpleRobot(startPosition, Direction.North)
 
     Direction.values.foreach(direction => {
@@ -14,7 +14,7 @@ class RobotSpec extends AnyFlatSpec with Matchers:
       robot.direction shouldBe direction
     })
 
-  it should "act correctly" in:
+  it should "act correctly" in :
     val robot = new SimpleRobot(startPosition, Direction.North)
 
     Direction.values.zip(List((0, 1), (1, 1), (1, 0), (0, 0))).foreach((direction, position) => {
@@ -24,9 +24,9 @@ class RobotSpec extends AnyFlatSpec with Matchers:
     })
 
 class RobotWithBatteryTest extends AnyFlatSpec with Matchers:
-  val startPosition: (Int, Int) = (0, 0)
+  val startPosition = (0, 0)
   val actionCost = 25
-  "A SimpleRobot with battery" should "act correctly" in :
+  "A Robot with battery" should "act correctly" in :
     val battery = 100
     val directionWithStep = Direction.values.zip(Stream.iterate(1)(_ + 1))
     val robot = new RobotWithBattery(SimpleRobot(startPosition, Direction.North), actionCost, battery)
@@ -42,3 +42,11 @@ class RobotWithBatteryTest extends AnyFlatSpec with Matchers:
     robot.act()
     robot.position shouldBe startPosition
 
+class RobotCanFailTest extends AnyFlatSpec with Matchers:
+  val startPosition = (0, 0)
+
+  "A Robot can fail with probability" should "act with 100% probability" in:
+    val probability = 100
+    val robot = new RobotCanFail(SimpleRobot(startPosition, Direction.North), probability)
+    robot.act()
+    robot.position shouldBe (0, 1)

@@ -45,8 +45,26 @@ class RobotWithBatteryTest extends AnyFlatSpec with Matchers:
 class RobotCanFailTest extends AnyFlatSpec with Matchers:
   val startPosition = (0, 0)
 
-  "A Robot can fail with probability" should "act with 100% probability" in:
+  "A Robot can fail with probability" should "act with 100%" in :
     val probability = 100
     val robot = new RobotCanFail(SimpleRobot(startPosition, Direction.North), probability)
     robot.act()
     robot.position shouldBe (0, 1)
+
+  it should "act with 0%" in :
+    val probability = 0
+    val robot = new RobotCanFail(SimpleRobot(startPosition, Direction.North), probability)
+    robot.act()
+    robot.position shouldBe startPosition
+
+class RobotRepeatedTest extends AnyFlatSpec with Matchers:
+
+  "A robot repeat action" should "n times act" in:
+    val startPosition = (0, 0)
+    val repeatAction = 5
+    val robot = new RobotRepeated(SimpleRobot(startPosition, Direction.North), repeatAction)
+
+    robot.act()
+    robot.position shouldBe (0, repeatAction)
+
+  

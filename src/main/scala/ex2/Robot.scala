@@ -34,17 +34,18 @@ class SimpleRobot(var position: Position, var direction: Direction) extends Robo
 
 class RobotWithBattery(val robot: Robot, val actionCost: Int, var battery: Int = 100) extends Robot:
   export robot.{act => _, *}
-
   private def decreaseBattery(): Unit = battery -= actionCost
   private def isNotLowBattery: Boolean = battery > 0
   override def act(): Unit = if isNotLowBattery then { robot.act(); decreaseBattery() }
 
 class RobotCanFail(val robot: Robot, val probability: Int) extends Robot:
   export robot.{act => _, *}
-
   private def isPossibleAction: Boolean = Random.nextInt(101) <= probability
   override def act(): Unit = if isPossibleAction then robot.act()
 
+class RobotRepeated(val robot: Robot, val repeatAction: Int) extends Robot:
+  export robot.{act => _, *}
+  override def act(): Unit = List.iterate(0, repeatAction).apply(i => i).foreach(_ => robot.act())
 
 class DumbRobot(val robot: Robot) extends Robot:
   export robot.{position, direction, act}

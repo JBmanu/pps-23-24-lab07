@@ -58,13 +58,18 @@ class RobotCanFailTest extends AnyFlatSpec with Matchers:
     robot.position shouldBe startPosition
 
 class RobotRepeatedTest extends AnyFlatSpec with Matchers:
+  val startPosition = (0, 0)
 
   "A robot repeat action" should "n times act" in:
-    val startPosition = (0, 0)
     val repeatAction = 5
     val robot = new RobotRepeated(SimpleRobot(startPosition, Direction.North), repeatAction)
-
     robot.act()
     robot.position shouldBe (0, repeatAction)
 
-  
+  it should "0 times act" in:
+    val repeatAction = 0
+    val robot = new RobotRepeated(SimpleRobot(startPosition, Direction.North), repeatAction)
+    robot.act()
+    robot.position shouldBe startPosition
+
+

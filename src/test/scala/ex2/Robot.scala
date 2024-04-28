@@ -4,35 +4,41 @@ import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 
 class RobotSpec extends AnyFlatSpec with Matchers:
+  val startPosition = (0, 0)
+
   "A SimpleRobot" should "turn correctly" in:
-    val robot = new SimpleRobot((0, 0), Direction.North)
+    val robot = new SimpleRobot(startPosition, Direction.North)
 
-    robot.turn(Direction.East)
-    robot.direction should be(Direction.East)
-
-    robot.turn(Direction.South)
-    robot.direction should be(Direction.South)
-
-    robot.turn(Direction.West)
-    robot.direction should be(Direction.West)
-
-    robot.turn(Direction.North)
-    robot.direction should be(Direction.North)
+    Direction.values.foreach(direction => {
+      robot.turn(direction)
+      robot.direction shouldBe direction
+    })
 
   it should "act correctly" in:
-    val robot = new SimpleRobot((0, 0), Direction.North)
+    val robot = new SimpleRobot(startPosition, Direction.North)
 
-    robot.act()
-    robot.position should be((0, 1))
+    Direction.values.zip(List((0, 1), (1, 1), (1, 0), (0, 0))).foreach((direction, position) => {
+      robot.turn(direction)
+      robot.act()
+      robot.position shouldBe position
+    })
 
-    robot.turn(Direction.East)
-    robot.act()
-    robot.position should be((1, 1))
+class RobotWithBatteryTest extends AnyFlatSpec with Matchers:
+  val startPosition: (Int, Int) = (0, 0)
+  val actionCost = 25
+  "A SimpleRobot with battery" should "act correctly" in :
+    val battery = 100
+    val directionWithStep = Direction.values.zip(Stream.iterate(1)(_ + 1))
+    val robot = new RobotWithBattery(SimpleRobot(startPosition, Direction.North), actionCost, battery)
 
-    robot.turn(Direction.South)
-    robot.act()
-    robot.position should be((1, 0))
+    directionWithStep.foreach((direction, step) => {
+      robot.act()
+      robot.battery shouldBe (battery - (actionCost * step))
+    })
 
-    robot.turn(Direction.West)
+  it should "turn with zero battery" in :
+    val zeroBattery = 0
+    val robot = new RobotWithBattery(SimpleRobot(startPosition, Direction.North), actionCost, zeroBattery)
     robot.act()
-    robot.position should be((0, 0))
+    robot.position shouldBe startPosition
+

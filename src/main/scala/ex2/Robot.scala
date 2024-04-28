@@ -32,7 +32,7 @@ class SimpleRobot(var position: Position, var direction: Direction) extends Robo
 
 class RobotWithBattery(val robot: Robot, val actionCost: Int, var battery: Int = 100) extends Robot:
   export robot.{position, direction, turn}
-
+  
   private def decreaseBattery(): Unit = battery -= actionCost
   private def checkBattery(): Boolean = battery < 1
 
@@ -40,6 +40,8 @@ class RobotWithBattery(val robot: Robot, val actionCost: Int, var battery: Int =
     if checkBattery() then return
     robot.act()
     decreaseBattery()
+
+
 
 
 class DumbRobot(val robot: Robot) extends Robot:

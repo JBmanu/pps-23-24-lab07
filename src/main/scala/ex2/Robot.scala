@@ -31,11 +31,16 @@ class SimpleRobot(var position: Position, var direction: Direction) extends Robo
   override def toString: String = s"robot at $position facing $direction"
 
 class RobotWithBattery(val robot: Robot, val actionCost: Int, var battery: Int = 100) extends Robot:
-  export robot.{position, direction}
-  override def turn(dir: Direction): Unit = { robot.turn(dir); decreaseBattery }
-  override def act(): Unit = { robot.act(); decreaseBattery }
+  export robot.{position, direction, turn}
 
-  private def decreaseBattery: Unit = battery -= actionCost
+  private def decreaseBattery(): Unit = battery -= actionCost
+  private def checkBattery(): Boolean = battery < 1
+
+  override def act(): Unit =
+    if checkBattery() then return
+    robot.act()
+    decreaseBattery()
+
 
 class DumbRobot(val robot: Robot) extends Robot:
   export robot.{position, direction, act}

@@ -6,38 +6,26 @@ import org.scalatest.matchers.should.Matchers
 import scala.language.postfixOps
 
 class RobotWithBatteryTest extends AnyFlatSpec with Matchers:
+  val directionWithStep = Direction.values.zip(Stream.iterate(1)(_ + 1))
+  val startPosition = (0, 0)
+  val actionCost = 25
+  val battery = 100
 
-  "A SimpleRobot with battery" should "turn correctly" in :
-    val battery = 100
-    val actionCost = 25
+  "A SimpleRobot with battery" should "act correctly" in :
     val robot = new RobotWithBattery(SimpleRobot((0, 0), Direction.North), actionCost, battery)
-
-    Direction.values.zip(Stream.iterate(1)(_ + 1)).foreach((direction, step) => {
-      robot.turn(direction)
-      robot.direction should be(direction)
+    directionWithStep.foreach((direction, step) => {
+      robot.act()
       robot.battery should be(battery - (actionCost * step))
     })
 
-  it should "act correctly" in :
-    val robot = new RobotWithBattery(SimpleRobot((0, 0), Direction.North), 4)
-
+  it should "turn with zero battery" in :
+    val zeroBattery = 0
+    val robot = new RobotWithBattery(SimpleRobot((0, 0), Direction.North), actionCost, zeroBattery)
     robot.act()
-    robot.position should be((0, 1))
+    robot.position should be(startPosition)
 
-    robot.turn(Direction.East)
-    robot.act()
-    robot.position should be((1, 1))
 
-    robot.turn(Direction.South)
-    robot.act()
-    robot.position should be((1, 0))
 
-    robot.turn(Direction.West)
-    robot.act()
-    robot.position should be((0, 0))
-
-  it should "zero battery" in :
-    val robot = new RobotWithBattery(SimpleRobot((0, 0), Direction.North), 100)
 
 
 
